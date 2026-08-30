@@ -7,8 +7,8 @@ import java.util.Random;
  * WriteRandomData.java
  *
  * Assignment:  Module Assignment - File I/O with Arrays
- * Author:      Z. White
- * Date:        08/22/2026
+ * Author:      Zachary White
+ * Date:        08/20/2026
  * Course:      CSD420
  *
  * Description:

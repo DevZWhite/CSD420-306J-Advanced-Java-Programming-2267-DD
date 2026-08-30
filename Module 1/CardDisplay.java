@@ -2,7 +2,7 @@
  * Author: Zachary White
  * Course: CSD 420 Advanced Java Programming
  * Assignment: Module 1 Programming Assignment - Random Card Display
- * Date: 17 August 2026
+ * Date: 16 August 2026
  *
  * Description:
  * A JavaFX application that shows four randomly chosen playing cards
