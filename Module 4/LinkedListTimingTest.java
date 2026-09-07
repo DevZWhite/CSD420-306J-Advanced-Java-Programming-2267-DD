@@ -14,6 +14,7 @@
  * once with 500,000 integers, so the two approaches can be compared both
  * within a single run and across the two list sizes.
  */
+
 import java.util.Iterator;
 import java.util.LinkedList;
 
