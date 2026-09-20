@@ -1,0 +1,33 @@
+/*
+ * File: mystyle.css
+ * Author: Zachary White
+ * Course: CSD 420 Advanced Java Programming
+ * Assignment: Module 7 Programming Assignment
+ */
+
+/* Class selector: thick black border box (wraps the first circle) */
+.border {
+    -fx-border-color: black;
+    -fx-border-width: 5;
+}
+
+/* Class selector: white fill with a thin black stroke (circles 1 and 2) */
+.plainStyle {
+    -fx-fill: white;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+/* ID selector: red fill (circle 3) */
+#redStyle {
+    -fx-fill: red;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+/* ID selector: green fill (circle 4) */
+#greenStyle {
+    -fx-fill: green;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
