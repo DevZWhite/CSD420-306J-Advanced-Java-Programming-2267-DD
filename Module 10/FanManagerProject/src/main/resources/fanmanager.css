@@ -1,0 +1,129 @@
+/* Fan Manager - stylesheet
+   Author: Zachary White
+   Course: CSD 420 */
+
+.root {
+    -fx-background-color: transparent;
+}
+
+.content-area {
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to bottom right, #1f2937, #0f172a);
+    -fx-background-radius: 0 0 14 14;
+}
+
+/* ---- Custom title bar ---- */
+
+.title-bar {
+    -fx-background-color: #111827;
+    -fx-background-radius: 14 14 0 0;
+    -fx-border-color: transparent transparent #1f2937 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.title-bar-icon {
+    -fx-font-size: 14px;
+}
+
+.title-bar-text {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5px;
+}
+
+.title-bar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-min-width: 30px;
+    -fx-min-height: 26px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.title-bar-button:hover {
+    -fx-background-color: #374151;
+    -fx-text-fill: #f9fafb;
+}
+
+.title-bar-close:hover {
+    -fx-background-color: #dc2626;
+    -fx-text-fill: white;
+}
+
+/* ---- Content ---- */
+
+.title-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 23px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 6 0;
+}
+
+.form-label {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.text-field {
+    -fx-alignment: center;
+    -fx-background-color: #151e2d;
+    -fx-text-fill: #f9fafb;
+    -fx-prompt-text-fill: #6b7280;
+    -fx-background-radius: 8;
+    -fx-border-color: #2d3748;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.2;
+    -fx-padding: 9 12 9 12;
+    -fx-font-size: 13px;
+}
+
+.text-field:focused {
+    -fx-alignment: center;
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 1.6;
+    -fx-background-color: #17233a;
+}
+
+.button {
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+}
+
+.display-button {
+    -fx-background-color: #2d3748;
+    -fx-text-fill: #f1f5f9;
+}
+
+.display-button:hover {
+    -fx-background-color: #3a4a61;
+}
+
+.update-button {
+    -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+    -fx-text-fill: white;
+}
+
+.update-button:hover {
+    -fx-background-color: linear-gradient(to right, #2f6fe0, #1d4ed8);
+}
+
+.status-label {
+    -fx-font-size: 12px;
+    -fx-padding: 6 0 0 0;
+}
+
+.status-success {
+    -fx-text-fill: #34d399;
+}
+
+.status-error {
+    -fx-text-fill: #f87171;
+}
