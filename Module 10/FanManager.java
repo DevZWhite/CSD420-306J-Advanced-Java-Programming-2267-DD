@@ -2,7 +2,7 @@
  * Author: Zachary White
  * Course: CSD 420 - Advanced Java Programming
  * Professor: Darrell Payne
- * Date: October 2, 2026
+ * Date: October 11, 2026
  * Assignment: Fan Manager - JavaFX / JDBC CRUD Interface
  *
  * A JavaFX front end for the "fans" table in databasedb. The application
@@ -12,34 +12,181 @@
  * Table "fans": ID (int, PK), firstname (varchar25),
  * lastname (varchar25), favoriteteam (varchar25)
  */
-package com.mycompany.fanmanagerproject;
 
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
  
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
  
 public class FanManager extends Application {
  
+    // Stylesheet embedded in the source so the program has no external file
+    // dependencies and runs as a single self-contained class.
+    private static final String STYLE_SHEET = """
+            /* Fan Manager - stylesheet
+               Author: Zachary White
+               Course: CSD 420 */
+
+            .root {
+                -fx-background-color: transparent;
+            }
+
+            .content-area {
+                -fx-alignment: center;
+                -fx-background-color: linear-gradient(to bottom right, #1f2937, #0f172a);
+                -fx-background-radius: 0 0 14 14;
+            }
+
+            /* ---- Custom title bar ---- */
+
+            .title-bar {
+                -fx-background-color: #111827;
+                -fx-background-radius: 14 14 0 0;
+                -fx-border-color: transparent transparent #1f2937 transparent;
+                -fx-border-width: 0 0 1 0;
+            }
+
+            .title-bar-icon {
+                -fx-font-size: 14px;
+            }
+
+            .title-bar-text {
+                -fx-text-fill: #e5e7eb;
+                -fx-font-size: 12px;
+                -fx-font-weight: 600;
+                -fx-letter-spacing: 0.5px;
+            }
+
+            .title-bar-button {
+                -fx-background-color: transparent;
+                -fx-text-fill: #9ca3af;
+                -fx-font-size: 13px;
+                -fx-font-weight: bold;
+                -fx-background-radius: 5;
+                -fx-min-width: 30px;
+                -fx-min-height: 26px;
+                -fx-padding: 0;
+                -fx-cursor: hand;
+            }
+
+            .title-bar-button:hover {
+                -fx-background-color: #374151;
+                -fx-text-fill: #f9fafb;
+            }
+
+            .title-bar-close:hover {
+                -fx-background-color: #dc2626;
+                -fx-text-fill: white;
+            }
+
+            /* ---- Content ---- */
+
+            .title-label {
+                -fx-text-fill: #ffffff;
+                -fx-font-size: 23px;
+                -fx-font-weight: bold;
+                -fx-padding: 0 0 6 0;
+            }
+
+            .form-label {
+                -fx-text-fill: #9ca3af;
+                -fx-font-size: 12px;
+                -fx-font-weight: 600;
+            }
+
+            .text-field {
+                -fx-alignment: center;
+                -fx-background-color: #151e2d;
+                -fx-text-fill: #f9fafb;
+                -fx-prompt-text-fill: #6b7280;
+                -fx-background-radius: 8;
+                -fx-border-color: #2d3748;
+                -fx-border-radius: 8;
+                -fx-border-width: 1.2;
+                -fx-padding: 9 12 9 12;
+                -fx-font-size: 13px;
+            }
+
+            .text-field:focused {
+                -fx-alignment: center;
+                -fx-border-color: #3b82f6;
+                -fx-border-width: 1.6;
+                -fx-background-color: #17233a;
+            }
+
+            .button {
+                -fx-background-radius: 8;
+                -fx-font-size: 13px;
+                -fx-font-weight: 600;
+                -fx-padding: 10 24 10 24;
+                -fx-cursor: hand;
+            }
+
+            .display-button {
+                -fx-background-color: #2d3748;
+                -fx-text-fill: #f1f5f9;
+            }
+
+            .display-button:hover {
+                -fx-background-color: #3a4a61;
+            }
+
+            .update-button {
+                -fx-background-color: linear-gradient(to right, #3b82f6, #2563eb);
+                -fx-text-fill: white;
+            }
+
+            .update-button:hover {
+                -fx-background-color: linear-gradient(to right, #2f6fe0, #1d4ed8);
+            }
+
+            .status-label {
+                -fx-font-size: 12px;
+                -fx-padding: 6 0 0 0;
+            }
+
+            .status-success {
+                -fx-text-fill: #34d399;
+            }
+
+            .status-error {
+                -fx-text-fill: #f87171;
+            }
+            """;
+
     // JDBC connection details matching the assignment requirements
     private static final String URL =
             "jdbc:mysql://localhost:3306/databasedb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
@@ -116,13 +263,13 @@ public class FanManager extends Application {
  
         Scene scene = new Scene(root, 360, 480);
         scene.setFill(null);
-        scene.getStylesheets().add(getClass().getResource("/fanmanager.css").toExternalForm());
+        applyStyles(scene);
  
         primaryStage.setTitle("Fan Manager");
         try {
-            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/fanmanager-icon.png")));
+            primaryStage.getIcons().add(buildIcon());
         } catch (Exception ignored) {
-            // Icon is optional -- app still runs fine without it if the file is missing
+            // Icon is cosmetic -- the app still runs normally without it
         }
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -132,6 +279,45 @@ public class FanManager extends Application {
         runTests();
     }
  
+    /**
+     * Applies the embedded stylesheet. It is written to a temporary file and
+     * loaded by URI; if that is not possible a data: URI is used instead.
+     * Styling is cosmetic, so a failure here never stops the application.
+     */
+    private void applyStyles(Scene scene) {
+        try {
+            Path cssFile = Files.createTempFile("fanmanager", ".css");
+            Files.write(cssFile, STYLE_SHEET.getBytes(StandardCharsets.UTF_8));
+            cssFile.toFile().deleteOnExit();
+            scene.getStylesheets().add(cssFile.toUri().toString());
+        } catch (IOException | RuntimeException e) {
+            try {
+                String encoded = Base64.getEncoder()
+                        .encodeToString(STYLE_SHEET.getBytes(StandardCharsets.UTF_8));
+                scene.getStylesheets().add("data:text/css;base64," + encoded);
+            } catch (RuntimeException ignored) {
+                // fall back to the default JavaFX look
+            }
+        }
+    }
+
+    /** Draws the application icon in code so no image file is needed. */
+    private Image buildIcon() {
+        Canvas canvas = new Canvas(128, 128);
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFill(Color.web("#2563eb"));
+        g.fillRoundRect(4, 4, 120, 120, 34, 34);
+        g.setFill(Color.WHITE);
+        g.setFont(Font.font("System", FontWeight.BOLD, 76));
+        g.setTextAlign(TextAlignment.CENTER);
+        g.setTextBaseline(VPos.CENTER);
+        g.fillText("F", 64, 66);
+
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        return canvas.snapshot(params, new WritableImage(128, 128));
+    }
+
     /**
      * Builds a custom dark title bar to replace the OS-native one (the
      * window uses StageStyle.UNDECORATED). Includes the app name/icon,

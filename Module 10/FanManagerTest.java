@@ -2,15 +2,13 @@
  * Author: Zachary White
  * Course: CSD 420 - Advanced Java Programming
  * Professor: Darrell Payne
- * Date: October 2, 2026
+ * Date: October 11, 2026
  * Assignment: Fan Manager - JavaFX / JDBC CRUD Interface
  *
  * Lightweight, dependency-free test harness (no JUnit required) that
  * exercises FanManager.fetchFan() and FanManager.applyUpdate() directly,
  * independent of the JavaFX UI, plus a basic input-validation check.
  */
-
-package com.mycompany.fanmanagerproject;
 
 import java.sql.SQLException;
 
